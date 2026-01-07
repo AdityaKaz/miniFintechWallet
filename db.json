@@ -1,21 +1,33 @@
 {
   "users": [
-    { "id": 1, "name": "Alice Carter", "email": "alice@example.com" },
-    { "id": 2, "name": "Ben Davis", "email": "ben@example.com" },
-    { "id": 3, "name": "Chloe Lee", "email": "chloe@example.com" }
+    {
+      "id": "1",
+      "name": "Alice Carter",
+      "email": "alice@example.com"
+    },
+    {
+      "id": "2",
+      "name": "Ben Davis",
+      "email": "ben@example.com"
+    },
+    {
+      "id": "3",
+      "name": "Chloe Lee",
+      "email": "chloe@example.com"
+    }
   ],
   "transactions": [
     {
-      "id": 101,
+      "id": "101",
       "type": "credit",
       "amount": 5000,
       "userId": 1,
       "status": "success",
-      "note": "Initial top-up",
+      "note": "Updated via Postman test",
       "createdAt": "2024-12-28T10:15:00Z"
     },
     {
-      "id": 102,
+      "id": "102",
       "type": "debit",
       "amount": 1200,
       "userId": 1,
@@ -25,7 +37,7 @@
       "createdAt": "2024-12-29T14:25:00Z"
     },
     {
-      "id": 103,
+      "id": "103",
       "type": "fee",
       "amount": 24,
       "userId": 1,
@@ -35,17 +47,19 @@
       "createdAt": "2024-12-29T14:25:10Z"
     },
     {
-      "id": 104,
+      "id": "104",
       "type": "debit",
       "amount": 300,
       "userId": 1,
       "toUserId": 3,
       "status": "failed",
       "note": "Transfer to Chloe (failed)",
-      "createdAt": "2024-12-30T09:10:00Z"
+      "createdAt": "2024-12-30T09:10:00Z",
+      "deleted": true,
+      "deletedAt": "2026-01-07T12:10:00Z"
     },
     {
-      "id": 105,
+      "id": "105",
       "type": "credit",
       "amount": 750,
       "userId": 1,
@@ -54,7 +68,7 @@
       "createdAt": "2025-01-02T11:45:00Z"
     },
     {
-      "id": 106,
+      "id": "106",
       "type": "debit",
       "amount": 2000,
       "userId": 2,
@@ -64,7 +78,7 @@
       "createdAt": "2025-01-03T16:05:00Z"
     },
     {
-      "id": 107,
+      "id": "107",
       "type": "fee",
       "amount": 40,
       "userId": 2,
@@ -72,6 +86,15 @@
       "note": "Refund fee",
       "linkedTransactionId": 106,
       "createdAt": "2025-01-03T16:05:05Z"
+    },
+    {
+      "id": "0186",
+      "type": "credit",
+      "amount": 2500,
+      "userId": 1,
+      "status": "pending",
+      "note": "Test add money",
+      "createdAt": "2026-01-07T12:00:00Z"
     }
   ]
 }
