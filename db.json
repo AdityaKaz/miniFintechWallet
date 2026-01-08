@@ -3,17 +3,20 @@
     {
       "id": "1",
       "name": "Alice Carter",
-      "email": "alice@example.com"
+      "email": "alice@example.com",
+      "balance": 3776
     },
     {
       "id": "2",
       "name": "Ben Davis",
-      "email": "ben@example.com"
+      "email": "ben@example.com",
+      "balance": 3200
     },
     {
       "id": "3",
       "name": "Chloe Lee",
-      "email": "chloe@example.com"
+      "email": "chloe@example.com",
+      "balance": 0
     }
   ],
   "transactions": [
@@ -91,10 +94,82 @@
       "id": "0186",
       "type": "credit",
       "amount": 2500,
-      "userId": 1,
+      "userId": 2,
       "status": "pending",
       "note": "Test add money",
       "createdAt": "2026-01-07T12:00:00Z"
+    },
+    {
+      "id": "4282",
+      "type": "credit",
+      "amount": 25,
+      "userId": 1,
+      "status": "success",
+      "note": "Top-up",
+      "createdAt": "2026-01-07T10:15:28.095Z"
+    },
+    {
+      "id": "5392",
+      "type": "credit",
+      "amount": 4101,
+      "userId": 1,
+      "status": "success",
+      "note": "Top-up",
+      "createdAt": "2026-01-07T10:19:47.597Z"
+    },
+    {
+      "id": "c2d2",
+      "type": "credit",
+      "amount": 1,
+      "userId": 1,
+      "status": "success",
+      "note": "Top-up",
+      "createdAt": "2026-01-07T10:33:06.086Z"
+    },
+    {
+      "id": "6706",
+      "type": "credit",
+      "amount": 314,
+      "userId": 1,
+      "status": "success",
+      "note": "Top-up",
+      "createdAt": "2026-01-07T10:33:44.971Z"
+    },
+    {
+      "id": "70de",
+      "type": "credit",
+      "amount": 55,
+      "userId": 1,
+      "status": "success",
+      "note": "Top-up",
+      "createdAt": "2026-01-07T10:33:48.415Z"
+    },
+    {
+      "id": "0d58",
+      "type": "credit",
+      "amount": 88,
+      "userId": 1,
+      "status": "success",
+      "note": "Top-up",
+      "createdAt": "2026-01-07T10:33:52.649Z"
+    },
+    {
+      "id": "765c",
+      "type": "credit",
+      "amount": 890,
+      "userId": 1,
+      "status": "success",
+      "note": "Top-up",
+      "createdAt": "2026-01-07T10:34:19.692Z"
+    },
+    {
+      "id": "8d32",
+      "type": "credit",
+      "amount": 100,
+      "userId": 1,
+      "status": "success",
+      "note": "Top-up",
+      "createdAt": "2026-01-07T12:11:43.809Z"
     }
   ]
 }

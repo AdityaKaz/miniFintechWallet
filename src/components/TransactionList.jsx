@@ -1,36 +1,117 @@
-const TransactionList = () => {
-  return (
-    <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-        <div>
-          <h2 className="text-2xl font-semibold text-white">
-            Transaction History
-          </h2>
-          <p className="text-gray-300 mt-1 text-[15px]">
-            Filter by status/date and review recent activity.
-          </p>
-        </div>
-        <div className="flex flex-wrap gap-2 text-[13px] text-gray-300">
-          <span className="px-3 py-1 rounded-full bg-gray-800 border border-gray-700">
-            All
-          </span>
-          <span className="px-3 py-1 rounded-full bg-gray-800 border border-gray-700">
-            Success
-          </span>
-          <span className="px-3 py-1 rounded-full bg-gray-800 border border-gray-700">
-            Pending
-          </span>
-          <span className="px-3 py-1 rounded-full bg-gray-800 border border-gray-700">
-            Failed
-          </span>
-        </div>
-      </div>
+const TransactionList = ({ transactions, loading }) => {
+  const formatCurrency = (amount) => {
+    return new Intl.NumberFormat("en-IN", {
+      style: "currency",
+      currency: "INR",
+      minimumFractionDigits: 0,
+    }).format(amount);
+  };
 
-      <div className="rounded-xl border border-gray-800 bg-gray-850 p-5 text-gray-300 shadow-inner shadow-black/20">
-        <p className="text-[15px]">
-          No transactions yet. When wired, this will list your latest activity.
-        </p>
+  const formatDate = (dateString) => {
+    return new Date(dateString).toLocaleDateString("en-IN", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  };
+
+  const getTransactionLabel = (tx) => {
+    if (tx.type === "credit") return "Added Money";
+    if (tx.type === "debit") return `Transfer to ${tx.toUserId}`;
+    if (tx.type === "fee") return "Transfer Fee";
+    return tx.type;
+  };
+
+  const getStatusColor = (status) => {
+    switch (status) {
+      case "success":
+        return "bg-green-900/30 text-green-200 border-green-700";
+      case "failed":
+        return "bg-red-900/30 text-red-200 border-red-700";
+      case "pending":
+        return "bg-yellow-900/30 text-yellow-200 border-yellow-700";
+      default:
+        return "bg-gray-700 text-gray-200";
+    }
+  };
+
+  const getTypeColor = (type) => {
+    switch (type) {
+      case "credit":
+        return "text-green-400";
+      case "debit":
+        return "text-red-400";
+      case "fee":
+        return "text-orange-400";
+      default:
+        return "text-gray-400";
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="space-y-3">
+        {[1, 2, 3].map((i) => (
+          <div key={i} className="h-16 bg-gray-700 rounded animate-pulse" />
+        ))}
       </div>
+    );
+  }
+
+  if (transactions.length === 0) {
+    return (
+      <div className="text-center py-8">
+        <p className="text-gray-400 text-[15px]">No transactions yet</p>
+        <p className="text-gray-500 text-sm mt-1">Add money to get started</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-2">
+      {transactions.slice(0, 10).map((tx) => (
+        <div
+          key={tx.id}
+          className="flex items-center justify-between p-4 rounded-lg border border-gray-700 bg-gray-800/40 hover:bg-gray-800/60 transition-colors"
+        >
+          <div className="flex items-center gap-3 flex-1">
+            <div className="flex-1">
+              <p className="text-white font-medium text-sm">
+                {getTransactionLabel(tx)}
+              </p>
+              <p className="text-gray-400 text-xs mt-1">
+                {formatDate(tx.createdAt)}
+              </p>
+              {tx.note && (
+                <p className="text-gray-500 text-xs mt-1">"{tx.note}"</p>
+              )}
+            </div>
+          </div>
+
+          <div className="flex items-center gap-3">
+            <div className="text-right">
+              <p className={`font-semibold text-sm ${getTypeColor(tx.type)}`}>
+                {tx.type === "credit" ? "+" : "-"}
+                {formatCurrency(tx.amount)}
+              </p>
+              <span
+                className={`inline-block px-2 py-1 text-xs rounded border mt-1 ${getStatusColor(
+                  tx.status
+                )}`}
+              >
+                {tx.status}
+              </span>
+            </div>
+          </div>
+        </div>
+      ))}
+      {transactions.length > 10 && (
+        <p className="text-gray-500 text-xs text-center mt-4">
+          Showing 10 of {transactions.length} transactions
+        </p>
+      )}
     </div>
   );
 };

@@ -93,11 +93,20 @@ Mock data in `db.json` includes 3 users and 8 sample transactions.
 
 ## Current Status
 
+Day 1
+
 - Project setup (Vite, React, Tailwind)
 - Mock API with JSON Server
 - Project structure and routing
-- Error boundary
-- ESLint configuration
+- Error boundary and ESLint configuration
+
+Day 2
+
+- Dashboard shows live wallet balance (derived from transactions)
+- Recent Transactions shows latest 10, sorted newest-first
+- Add Money form with validation (required, > 0, ≤ ₹10,000)
+- Creates a `credit` transaction via API and refreshes balance/list
+- Per-user filtering using `CURRENT_USER_ID` (no login yet)
 
 ## Dependencies
 
