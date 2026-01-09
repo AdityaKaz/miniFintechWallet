@@ -1,5 +1,9 @@
 import { useState } from "react";
-import { createTransaction } from "../services/api";
+import {
+  createTransaction,
+  fetchUser,
+  updateUserBalance,
+} from "../services/api";
 import { TRANSFER_LIMIT, CURRENT_USER_ID } from "../config/constants";
 import { validateAddMoneyAmount } from "../utils/validation";
 
@@ -30,6 +34,11 @@ const AddMoneyForm = ({ userId = CURRENT_USER_ID, onSuccess }) => {
 
     try {
       setLoading(true);
+
+      // Fetch current user balance
+      const user = await fetchUser(userId);
+
+      // Create credit transaction
       const payload = {
         type: "credit",
         amount: numericAmount,
@@ -39,6 +48,11 @@ const AddMoneyForm = ({ userId = CURRENT_USER_ID, onSuccess }) => {
         createdAt: new Date().toISOString(),
       };
       await createTransaction(payload);
+
+      // Update user balance
+      const newBalance = user.balance + numericAmount;
+      await updateUserBalance(userId, newBalance);
+
       setAmount("");
       setNote("");
       if (typeof onSuccess === "function") onSuccess();

@@ -26,7 +26,15 @@ A wallet application demonstrating transaction management, balance tracking, and
 
 ## Running Tests
 
-_Tests to be added in Day 5_
+```bash
+npm test
+```
+
+Tests include:
+
+- **Unit Tests** (8+): Component rendering, validation logic, API calls
+- **Integration Tests** (1+): Critical flows (add money → balance update → history)
+- Test framework: Vitest with React Testing Library
 
 ## Tech Stack
 
@@ -88,16 +96,120 @@ Mock data in `db.json` includes 3 users and 8 sample transactions.
 - No user authentication - anyone accessing the app will see the same account
 - JSON Server data is lost when the mock API restarts (not persisted to disk)
 - Single user only - no support for multiple accounts or user profiles
-- No transaction recovery - deleted transactions can't be restored
-- Limited error feedback to user (basic validation messages only)
+- Undo window is 6 seconds - deleted transactions auto-confirm after that
+- Limited offline support - all operations require API connectivity
+- No pagination on transaction list (all transactions loaded at once)
 
-## Current Status
+## Features Implemented
 
-Day 1
+### ✅ Core Functionality
 
-- Project setup (Vite, React, Tailwind)
-- Mock API with JSON Server
-- Project structure and routing
+- **Dashboard**: Real-time balance display and last 10 transactions with empty/loading states
+- **Add Money**: Form validation, credit transaction recording, instant balance update
+- **Transfer Money**: 2% fee calculation, ₹10,000 per-transaction limit, confirmation modal
+- **Transaction History**: Date range filters, status filters (all/success/pending/failed), soft delete with 6-second undo window
+- **Error Handling**: Global error boundary, inline error messages, loading spinners
+- **Input Validation**: Amount validation, recipient validation, numeric checks
+
+### 🎨 UI/UX
+
+- Dark theme with Tailwind CSS
+- Responsive design (mobile-first)
+- Loading skeletons for async operations
+- Confirmation modals for sensitive actions
+- Inline undo banner with countdown
+- Real-time balance updates
+
+### 🔒 Security & Code Quality
+
+- Input sanitization and validation
+- No unsafe HTML rendering
+- Clean modular component structure
+- ESLint configuration for code quality
+- Proper error handling throughout
+
+## Folder Structure
+
+```
+miniFintechWallet/
+├── src/
+│   ├── components/
+│   │   ├── Dashboard.jsx          # Main dashboard view
+│   │   ├── AddMoneyForm.jsx       # Add funds form
+│   │   ├── TransferMoneyForm.jsx  # Transfer with fee calculation
+│   │   ├── History.jsx            # Transaction history with filters
+│   │   ├── TransactionList.jsx    # Reusable transaction display
+│   │   ├── TransferConfirmationModal.jsx
+│   │   └── ErrorBoundary.jsx      # Global error handler
+│   ├── services/
+│   │   └── api.js                 # Axios client & API calls
+│   ├── config/
+│   │   └── constants.js           # Fee %, limit, user ID
+│   ├── utils/
+│   │   └── validation.js          # Input validation helpers
+│   ├── App.jsx                    # Routing & layout
+│   ├── main.jsx                   # Entry point
+│   └── index.css                  # Global styles
+├── public/                        # Static assets
+├── db.json                        # Mock API data
+├── package.json
+├── vite.config.js
+└── eslint.config.js
+```
+
+## Business Rules Configuration
+
+Edit `src/config/constants.js` to adjust:
+
+```javascript
+export const TRANSFER_FEE_PERCENT = 2; // Fee percentage
+export const PER_TRANSACTION_LIMIT = 10000; // Max amount per transfer
+export const CURRENT_USER_ID = 1; // Active user
+```
+
+## Development Workflow
+
+1. **Terminal 1**: Start mock API
+
+   ```bash
+   npm run mock:api
+   ```
+
+2. **Terminal 2**: Start frontend dev server
+
+   ```bash
+   npm run dev
+   ```
+
+3. **Terminal 3** (Optional): Run tests in watch mode
+   ```bash
+   npm test -- --watch
+   ```
+
+## Building for Production
+
+```bash
+npm run build
+```
+
+Outputs optimized files to `dist/` folder.
+
+## Troubleshooting
+
+| Issue                    | Solution                                                  |
+| ------------------------ | --------------------------------------------------------- |
+| Port 3001 already in use | Kill the process or use `npm run mock:api -- --port 3002` |
+| Port 5173 already in use | Vite will use next available port automatically           |
+| API calls failing        | Ensure mock API is running on http://localhost:3001       |
+| Balance not updating     | Check browser console for errors; refresh page if needed  |
+| Undo not appearing       | 6-second window may have expired; delete again to test    |
+
+## Browser Support
+
+- Chrome/Edge (Latest)
+- Firefox (Latest)
+- Safari (Latest)
+- Mobile browsers (iOS Safari, Chrome Mobile)
 - Error boundary and ESLint configuration
 
 Day 2

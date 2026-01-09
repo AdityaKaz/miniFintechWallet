@@ -1,4 +1,15 @@
-const TransactionList = ({ transactions, loading }) => {
+const TransactionList = ({ transactions, loading, onDelete, showDelete }) => {
+  // Filter out fee transactions (they'll be shown inline with debits)
+  const visibleTransactions = transactions.filter((tx) => tx.type !== "fee");
+
+  // Create a map of transaction ID to fee amount for quick lookup
+  const feeMap = transactions.reduce((acc, tx) => {
+    if (tx.type === "fee" && tx.linkedTransactionId) {
+      acc[tx.linkedTransactionId] = tx.amount;
+    }
+    return acc;
+  }, {});
+
   const formatCurrency = (amount) => {
     return new Intl.NumberFormat("en-IN", {
       style: "currency",
@@ -20,7 +31,6 @@ const TransactionList = ({ transactions, loading }) => {
   const getTransactionLabel = (tx) => {
     if (tx.type === "credit") return "Added Money";
     if (tx.type === "debit") return `Transfer to ${tx.toUserId}`;
-    if (tx.type === "fee") return "Transfer Fee";
     return tx.type;
   };
 
@@ -43,8 +53,6 @@ const TransactionList = ({ transactions, loading }) => {
         return "text-green-400";
       case "debit":
         return "text-red-400";
-      case "fee":
-        return "text-orange-400";
       default:
         return "text-gray-400";
     }
@@ -60,7 +68,7 @@ const TransactionList = ({ transactions, loading }) => {
     );
   }
 
-  if (transactions.length === 0) {
+  if (visibleTransactions.length === 0) {
     return (
       <div className="text-center py-8">
         <p className="text-gray-400 text-[15px]">No transactions yet</p>
@@ -71,45 +79,63 @@ const TransactionList = ({ transactions, loading }) => {
 
   return (
     <div className="space-y-2">
-      {transactions.slice(0, 10).map((tx) => (
-        <div
-          key={tx.id}
-          className="flex items-center justify-between p-4 rounded-lg border border-gray-700 bg-gray-800/40 hover:bg-gray-800/60 transition-colors"
-        >
-          <div className="flex items-center gap-3 flex-1">
-            <div className="flex-1">
-              <p className="text-white font-medium text-sm">
-                {getTransactionLabel(tx)}
-              </p>
-              <p className="text-gray-400 text-xs mt-1">
-                {formatDate(tx.createdAt)}
-              </p>
-              {tx.note && (
-                <p className="text-gray-500 text-xs mt-1">"{tx.note}"</p>
+      {visibleTransactions.slice(0, 10).map((tx) => {
+        const fee = feeMap[tx.id];
+
+        return (
+          <div
+            key={tx.id}
+            className="flex items-center justify-between p-4 rounded-lg border border-gray-700 bg-gray-800/40 hover:bg-gray-800/60 transition-colors"
+          >
+            <div className="flex items-center gap-3 flex-1">
+              <div className="flex-1">
+                <p className="text-white font-medium text-sm">
+                  {getTransactionLabel(tx)}
+                </p>
+                <p className="text-gray-400 text-xs mt-1">
+                  {formatDate(tx.createdAt)}
+                </p>
+                {tx.note && (
+                  <p className="text-gray-500 text-xs mt-1">"{tx.note}"</p>
+                )}
+              </div>
+            </div>
+
+            <div className="flex items-center gap-3">
+              <div className="text-right">
+                <p className={`font-semibold text-sm ${getTypeColor(tx.type)}`}>
+                  {tx.type === "credit" ? "+" : "-"}
+                  {formatCurrency(tx.amount)}
+                  {fee && (
+                    <span className="text-xs text-gray-400 font-normal ml-1">
+                      ({formatCurrency(fee)} fee)
+                    </span>
+                  )}
+                </p>
+                <span
+                  className={`inline-block px-2 py-1 text-xs rounded border mt-1 ${getStatusColor(
+                    tx.status
+                  )}`}
+                >
+                  {tx.status}
+                </span>
+              </div>
+
+              {showDelete && typeof onDelete === "function" && (
+                <button
+                  onClick={() => onDelete(tx)}
+                  className="px-3 py-1 text-xs rounded border border-red-700 text-red-100 hover:bg-red-900/40 transition-colors"
+                >
+                  Delete
+                </button>
               )}
             </div>
           </div>
-
-          <div className="flex items-center gap-3">
-            <div className="text-right">
-              <p className={`font-semibold text-sm ${getTypeColor(tx.type)}`}>
-                {tx.type === "credit" ? "+" : "-"}
-                {formatCurrency(tx.amount)}
-              </p>
-              <span
-                className={`inline-block px-2 py-1 text-xs rounded border mt-1 ${getStatusColor(
-                  tx.status
-                )}`}
-              >
-                {tx.status}
-              </span>
-            </div>
-          </div>
-        </div>
-      ))}
-      {transactions.length > 10 && (
+        );
+      })}
+      {visibleTransactions.length > 10 && (
         <p className="text-gray-500 text-xs text-center mt-4">
-          Showing 10 of {transactions.length} transactions
+          Showing 10 of {visibleTransactions.length} transactions
         </p>
       )}
     </div>

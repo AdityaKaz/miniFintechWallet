@@ -1,32 +1,46 @@
 import { useState, useEffect } from "react";
-import { fetchTransactions, deriveBalance } from "../services/api";
+import { fetchTransactions, fetchUser } from "../services/api";
 import TransactionList from "./TransactionList";
 import AddMoneyForm from "./AddMoneyForm";
+import TransferMoneyForm from "./TransferMoneyForm";
 import { CURRENT_USER_ID } from "../config/constants";
 
-const Dashboard = () => {
+const Dashboard = ({ refreshTrigger = 0, isReconciling = false }) => {
   const [transactions, setTransactions] = useState([]);
   const [balance, setBalance] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [activeForm, setActiveForm] = useState("add"); // "add" or "transfer"
 
+  // Load data when reconciliation completes or when explicitly refreshed
   useEffect(() => {
-    loadTransactions();
-  }, []);
+    console.log(
+      "📊 Dashboard effect triggered - isReconciling:",
+      isReconciling,
+      "refreshTrigger:",
+      refreshTrigger
+    );
+    if (!isReconciling) {
+      console.log("📊 Loading dashboard data...");
+      loadData();
+    }
+  }, [isReconciling, refreshTrigger]);
 
-  const loadTransactions = async () => {
+  const loadData = async () => {
     try {
       setLoading(true);
       setError(null);
-      const data = await fetchTransactions(CURRENT_USER_ID);
-      const sorted = [...data].sort(
+      const [user, txnData] = await Promise.all([
+        fetchUser(CURRENT_USER_ID),
+        fetchTransactions(CURRENT_USER_ID),
+      ]);
+      const sorted = [...txnData].sort(
         (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
       );
       setTransactions(sorted);
-      const calculatedBalance = deriveBalance(data);
-      setBalance(calculatedBalance);
+      setBalance(user.balance);
     } catch (err) {
-      console.error("Failed to load transactions:", err);
+      console.error("Failed to load dashboard data:", err);
       setError("Failed to load wallet data. Please try again.");
     } finally {
       setLoading(false);
@@ -47,7 +61,7 @@ const Dashboard = () => {
         <div className="rounded-lg bg-red-900/20 border border-red-700 p-4">
           <p className="text-red-100 text-sm">{error}</p>
           <button
-            onClick={loadTransactions}
+            onClick={loadData}
             className="mt-3 px-3 py-2 bg-red-700 text-white rounded text-sm hover:bg-red-600"
           >
             Try Again
@@ -106,13 +120,39 @@ const Dashboard = () => {
         </div>
       </div>
 
-      {/* Add Money Form - To be added in Task 5 */}
+      {/* Quick Action Forms */}
       <div className="rounded-xl border border-gray-800 bg-gray-850 p-5">
-        <h3 className="text-lg font-semibold text-white mb-4">Add Money</h3>
-        <AddMoneyForm userId={CURRENT_USER_ID} onSuccess={loadTransactions} />
+        <div className="flex items-center gap-2 mb-4">
+          <button
+            onClick={() => setActiveForm("add")}
+            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+              activeForm === "add"
+                ? "bg-indigo-600 text-white"
+                : "bg-gray-800 text-gray-300 hover:bg-gray-700"
+            }`}
+          >
+            Add Money
+          </button>
+          <button
+            onClick={() => setActiveForm("transfer")}
+            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+              activeForm === "transfer"
+                ? "bg-indigo-600 text-white"
+                : "bg-gray-800 text-gray-300 hover:bg-gray-700"
+            }`}
+          >
+            Transfer Money
+          </button>
+        </div>
+
+        {activeForm === "add" ? (
+          <AddMoneyForm userId={CURRENT_USER_ID} onSuccess={loadData} />
+        ) : (
+          <TransferMoneyForm userId={CURRENT_USER_ID} onSuccess={loadData} />
+        )}
       </div>
 
-      {/* Recent Transactions - To be added in Task 3 */}
+      {/* Recent Transactions */}
       <div className="rounded-xl border border-gray-800 bg-gray-850 p-5 shadow-inner shadow-black/20">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-lg font-semibold text-white">
