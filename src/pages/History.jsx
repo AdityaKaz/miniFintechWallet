@@ -5,7 +5,7 @@ import {
   restoreTransaction,
 } from "../services/api";
 import { CURRENT_USER_ID } from "../config/constants";
-import TransactionList from "./TransactionList";
+import TransactionList from "../components/common/TransactionList";
 
 const History = ({ refreshTrigger = 0, isReconciling = false }) => {
   const [transactions, setTransactions] = useState([]);

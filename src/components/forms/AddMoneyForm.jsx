@@ -3,9 +3,9 @@ import {
   createTransaction,
   fetchUser,
   updateUserBalance,
-} from "../services/api";
-import { TRANSFER_LIMIT, CURRENT_USER_ID } from "../config/constants";
-import { validateAddMoneyAmount } from "../utils/validation";
+} from "../../services/api";
+import { TRANSFER_LIMIT, CURRENT_USER_ID } from "../../config/constants";
+import { validateAddMoneyAmount } from "../../utils/validation";
 
 const AddMoneyForm = ({ userId = CURRENT_USER_ID, onSuccess }) => {
   const [amount, setAmount] = useState("");

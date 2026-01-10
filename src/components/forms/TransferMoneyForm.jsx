@@ -5,19 +5,19 @@ import {
   fetchUsers,
   updateTransactionStatus,
   updateUserBalance,
-} from "../services/api";
+} from "../../services/api";
 import {
   collectValidationErrors,
   validateNote,
   validateRecipient,
   validateTransferAmount,
-} from "../utils/validation";
+} from "../../utils/validation";
 import {
   CURRENT_USER_ID,
   FEE_PERCENT,
   TRANSFER_LIMIT,
-} from "../config/constants";
-import TransferConfirmationModal from "./TransferConfirmationModal";
+} from "../../config/constants";
+import TransferConfirmationModal from "../modals/TransferConfirmationModal";
 
 const TransferMoneyForm = ({ userId = CURRENT_USER_ID, onSuccess }) => {
   const [amount, setAmount] = useState("");

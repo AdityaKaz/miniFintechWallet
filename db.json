@@ -4,13 +4,13 @@
       "id": "1",
       "name": "User One",
       "email": "one@example.com",
-      "balance": 6090
+      "balance": 7090
     },
     {
       "id": "2",
       "name": "User Two",
       "email": "two@example.com",
-      "balance": 4888
+      "balance": 3968
     }
   ],
   "transactions": [
@@ -135,6 +135,46 @@
       "note": "Received from User Two",
       "linkedTransactionId": "txn-6",
       "createdAt": "2026-01-09T11:44:46.009Z"
+    },
+    {
+      "id": "e016",
+      "type": "credit",
+      "amount": 100,
+      "userId": "2",
+      "status": "success",
+      "note": "Top-up",
+      "createdAt": "2026-01-09T17:31:58.765Z"
+    },
+    {
+      "id": "84db",
+      "type": "debit",
+      "amount": 1000,
+      "userId": "2",
+      "toUserId": "1",
+      "status": "success",
+      "note": "Transfer to User One",
+      "createdAt": "2026-01-09T17:33:57.865Z"
+    },
+    {
+      "id": "8a46",
+      "type": "fee",
+      "amount": 20,
+      "userId": "2",
+      "status": "success",
+      "note": "Transfer fee",
+      "linkedTransactionId": "84db",
+      "createdAt": "2026-01-09T17:33:57.865Z"
+    },
+    {
+      "id": "72c7",
+      "type": "credit",
+      "amount": 1000,
+      "userId": "1",
+      "fromUserId": "2",
+      "status": "success",
+      "note": "Received from User Two",
+      "linkedTransactionId": "84db",
+      "createdAt": "2026-01-09T17:33:57.865Z"
     }
   ]
 }

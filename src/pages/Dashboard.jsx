@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { fetchTransactions, fetchUser } from "../services/api";
-import TransactionList from "./TransactionList";
-import AddMoneyForm from "./AddMoneyForm";
-import TransferMoneyForm from "./TransferMoneyForm";
+import TransactionList from "../components/common/TransactionList";
+import AddMoneyForm from "../components/forms/AddMoneyForm";
+import TransferMoneyForm from "../components/forms/TransferMoneyForm";
 import { CURRENT_USER_ID } from "../config/constants";
 
 const Dashboard = ({ refreshTrigger = 0, isReconciling = false }) => {

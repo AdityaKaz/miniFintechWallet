@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { BrowserRouter, NavLink, Route, Routes } from "react-router-dom";
-import Dashboard from "./components/Dashboard";
-import History from "./components/History";
-import ErrorBoundary from "./components/ErrorBoundary";
+import Dashboard from "./pages/Dashboard";
+import History from "./pages/History";
+import ErrorBoundary from "./components/common/ErrorBoundary";
 import { fetchUser, reconcileAllPendingTransfers } from "./services/api";
 import { CURRENT_USER_ID } from "./config/constants";
 
