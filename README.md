@@ -50,11 +50,15 @@ Tests include:
 
 ```
 src/
-├── components/           # React components (Dashboard, Forms, etc.)
+├── pages/                # Route-level pages (Dashboard, History)
+├── components/           # Reusable UI building blocks
+│   ├── common/           # Shared components (ErrorBoundary, TransactionList)
+│   ├── forms/            # Form components (AddMoneyForm, TransferMoneyForm)
+│   └── modals/           # Modal components (TransferConfirmationModal)
 ├── services/             # API client (Axios instance)
 ├── config/               # Constants (fees, limits)
 ├── utils/                # Validation helpers
-└── App.jsx              # Main routing
+└── App.jsx               # Main routing
 ```
 
 ### Why These Technologies
@@ -133,14 +137,18 @@ Mock data in `db.json` includes 3 users and 8 sample transactions.
 ```
 miniFintechWallet/
 ├── src/
-│   ├── components/
+│   ├── pages/
 │   │   ├── Dashboard.jsx          # Main dashboard view
-│   │   ├── AddMoneyForm.jsx       # Add funds form
-│   │   ├── TransferMoneyForm.jsx  # Transfer with fee calculation
-│   │   ├── History.jsx            # Transaction history with filters
-│   │   ├── TransactionList.jsx    # Reusable transaction display
-│   │   ├── TransferConfirmationModal.jsx
-│   │   └── ErrorBoundary.jsx      # Global error handler
+│   │   └── History.jsx            # Transaction history with filters
+│   ├── components/
+│   │   ├── common/
+│   │   │   ├── TransactionList.jsx
+│   │   │   └── ErrorBoundary.jsx  # Global error handler
+│   │   ├── forms/
+│   │   │   ├── AddMoneyForm.jsx
+│   │   │   └── TransferMoneyForm.jsx
+│   │   └── modals/
+│   │       └── TransferConfirmationModal.jsx
 │   ├── services/
 │   │   └── api.js                 # Axios client & API calls
 │   ├── config/
