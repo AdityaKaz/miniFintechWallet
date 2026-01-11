@@ -3,122 +3,23 @@
     {
       "id": "1",
       "name": "User One",
-      "email": "one@example.com",
-      "balance": 4004.88
+      "balance": 3464.88
     },
     {
       "id": "2",
       "name": "User Two",
-      "email": "two@example.com",
-      "balance": 12491
+      "balance": 13491
+    },
+    {
+      "id": "3",
+      "name": "User Three",
+      "balance": 0
     }
   ],
   "transactions": [
     {
       "id": "seed-1",
       "type": "credit",
-      "amount": 5000,
-      "userId": "1",
-      "status": "success",
-      "note": "Seed balance",
-      "createdAt": "2026-01-01T00:00:00.000Z"
-    },
-    {
-      "id": "seed-2",
-      "type": "credit",
-      "amount": 3000,
-      "userId": "2",
-      "status": "success",
-      "note": "Seed balance",
-      "createdAt": "2026-01-01T00:00:01.000Z"
-    },
-    {
-      "id": "txn-1",
-      "type": "credit",
-      "amount": 1000,
-      "userId": "1",
-      "status": "success",
-      "note": "Add money (test)",
-      "createdAt": "2026-01-02T10:00:00.000Z"
-    },
-    {
-      "id": "txn-2",
-      "type": "debit",
-      "amount": 500,
-      "userId": "1",
-      "toUserId": "2",
-      "status": "success",
-      "note": "Transfer to User Two",
-      "createdAt": "2026-01-02T11:00:00.000Z"
-    },
-    {
-      "id": "txn-3",
-      "type": "fee",
-      "amount": 10,
-      "userId": "1",
-      "status": "success",
-      "note": "Transfer fee for txn-2",
-      "linkedTransactionId": "txn-2",
-      "createdAt": "2026-01-02T11:00:00.000Z"
-    },
-    {
-      "id": "txn-4",
-      "type": "credit",
-      "amount": 500,
-      "userId": "2",
-      "fromUserId": "1",
-      "status": "success",
-      "note": "Received from User One",
-      "linkedTransactionId": "txn-2",
-      "createdAt": "2026-01-02T11:00:00.000Z"
-    },
-    {
-      "id": "txn-5",
-      "type": "credit",
-      "amount": 2000,
-      "userId": "2",
-      "status": "success",
-      "note": "Add money (test)",
-      "createdAt": "2026-01-02T12:00:00.000Z",
-      "deleted": false,
-      "deletedAt": null
-    },
-    {
-      "id": "txn-6",
-      "type": "debit",
-      "amount": 600,
-      "userId": "2",
-      "toUserId": "1",
-      "status": "success",
-      "note": "PENDING: Transfer to User One (incomplete)",
-      "createdAt": "2026-01-03T13:00:00.000Z",
-      "deleted": true,
-      "deletedAt": "2026-01-09T11:54:17.026Z"
-    },
-    {
-      "id": "txn-7",
-      "type": "fee",
-      "amount": 12,
-      "userId": "2",
-      "status": "success",
-      "note": "PENDING: Fee for txn-6",
-      "linkedTransactionId": "txn-6",
-      "createdAt": "2026-01-03T13:00:00.000Z"
-    },
-    {
-      "id": "txn-8",
-      "type": "debit",
-      "amount": 1000,
-      "userId": "1",
-      "toUserId": "2",
-      "status": "failed",
-      "note": "FAILED: Transfer rejected (insufficient balance at time)",
-      "createdAt": "2026-01-03T14:00:00.000Z"
-    },
-    {
-      "id": "txn-9",
-      "type": "fee",
-      "amount": 20,
       "userId": "1",
       "status": "failed",
       "note": "FAILED: Fee for txn-8",
@@ -514,6 +415,47 @@
       "linkedTransactionId": "4ad6",
       "createdAt": "2026-01-11T14:24:21.244Z",
       "note": "Refund: Transfer failed (timeout, linked to 4ad6)"
+    },
+    {
+      "id": "84a7",
+      "type": "debit",
+      "amount": 1000,
+      "userId": "1",
+      "toUserId": "2",
+      "status": "success",
+      "note": "Transfer to User #2",
+      "createdAt": "2026-01-11T15:56:39.420Z"
+    },
+    {
+      "id": "0c8d",
+      "type": "fee",
+      "amount": 20,
+      "userId": "1",
+      "status": "success",
+      "note": "Transfer fee",
+      "linkedTransactionId": "84a7",
+      "createdAt": "2026-01-11T15:56:39.420Z"
+    },
+    {
+      "id": "3503",
+      "type": "credit",
+      "amount": 1000,
+      "userId": "2",
+      "fromUserId": "1",
+      "status": "success",
+      "note": "Received from User One",
+      "linkedTransactionId": "84a7",
+      "createdAt": "2026-01-11T15:56:39.420Z"
+    },
+    {
+      "id": "7298",
+      "type": "fee",
+      "amount": 20,
+      "userId": "1",
+      "status": "success",
+      "note": "Transfer fee",
+      "linkedTransactionId": "43c5",
+      "createdAt": "2026-01-11T15:56:56.870Z"
     }
   ]
 }

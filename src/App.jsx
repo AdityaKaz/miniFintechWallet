@@ -12,19 +12,24 @@ function App() {
   const [reconciling, setReconciling] = useState(true);
   const [reconcileError, setReconcileError] = useState(null);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
+
   const reconcileOnceRef = useRef(false);
 
+  // Load current user
   useEffect(() => {
     let active = true;
+
     fetchUser(CURRENT_USER_ID)
       .then((user) => {
         if (!active) return;
         setUserName(user?.name || "Wallet user");
+        setUserLoadError(null);
       })
       .catch((err) => {
         console.error("Failed to load user", err);
         if (!active) return;
         setUserLoadError("User unavailable");
+        setUserName("Wallet user");
       });
 
     return () => {
@@ -32,30 +37,27 @@ function App() {
     };
   }, [refreshTrigger]);
 
-  // Reconcile pending transfers on app startup (only once, using useRef)
+  // Reconcile pending transfers on app startup (only once)
   useEffect(() => {
-    if (reconcileOnceRef.current) return; // Already reconciled, don't run again
+    if (reconcileOnceRef.current) return;
     reconcileOnceRef.current = true;
 
     const runReconciliation = async () => {
       try {
         setReconciling(true);
         setReconcileError(null);
+
         const result = await reconcileAllPendingTransfers();
         console.log(
           `✅ Reconciliation complete: ${result.count} transfers fixed`
         );
 
-        // Add delay to ensure json-server commits changes before UI refresh
+        // Allow json-server time to commit writes
         if (result.count > 0) {
-          console.log("⏳ Waiting 300ms for db write...");
           await new Promise((resolve) => setTimeout(resolve, 300));
         }
 
-        // Clear reconciling state and trigger refresh
-        console.log("🔄 Setting isReconciling to false");
         setReconciling(false);
-        console.log("🔄 Incrementing refreshTrigger");
         setRefreshTrigger((prev) => prev + 1);
       } catch (err) {
         console.error("Reconciliation failed:", err);
@@ -78,10 +80,17 @@ function App() {
               <h1 className="text-3xl font-bold text-white">
                 Mini Fintech Wallet
               </h1>
-              <p className="text-base text-gray-400 mt-1">
-                Balance, transfers, and history in one view.
+
+              {/* User identity / load status */}
+              <p className="text-sm text-gray-400 mt-1">
+                {userLoadError
+                  ? userLoadError
+                  : userName
+                  ? `Welcome, ${userName}`
+                  : "Loading user..."}
               </p>
             </div>
+
             <nav className="flex gap-2 text-[15px] font-medium">
               <NavLink
                 to="/"
@@ -96,6 +105,7 @@ function App() {
               >
                 Dashboard
               </NavLink>
+
               <NavLink
                 to="/history"
                 className={({ isActive }) =>
@@ -111,6 +121,7 @@ function App() {
             </nav>
           </div>
         </header>
+
         <main>
           <div className="max-w-7xl mx-auto py-8 sm:px-6 lg:px-8">
             {reconciling && (
@@ -123,11 +134,13 @@ function App() {
                 </p>
               </div>
             )}
+
             {reconcileError && (
               <div className="rounded-lg bg-yellow-900/30 border border-yellow-700 p-4 mb-6">
                 <p className="text-yellow-200 text-sm">{reconcileError}</p>
               </div>
             )}
+
             <ErrorBoundary>
               <Routes>
                 <Route
@@ -136,6 +149,7 @@ function App() {
                     <Dashboard
                       refreshTrigger={refreshTrigger}
                       isReconciling={reconciling}
+                      userName={userName}
                     />
                   }
                 />
