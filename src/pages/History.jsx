@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import toast from "react-hot-toast";
 import {
   deleteTransaction,
   fetchTransactions,
@@ -14,6 +15,7 @@ const History = ({ refreshTrigger = 0, isReconciling = false }) => {
   const [filter, setFilter] = useState("all"); // all, success, pending, failed
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
   const [lastDeleted, setLastDeleted] = useState(null);
   const [undoTimerId, setUndoTimerId] = useState(null);
 
@@ -42,20 +44,15 @@ const History = ({ refreshTrigger = 0, isReconciling = false }) => {
       setTransactions(sorted);
     } catch (err) {
       console.error("Failed to load transactions:", err);
-      setError("Failed to load transaction history. Please try again.");
+      const msg = "Failed to load transaction history. Please try again.";
+      setError(msg);
+      toast.error(msg);
     } finally {
       setLoading(false);
     }
   };
 
   const handleDelete = async (tx) => {
-    const confirmed = window.confirm(
-      `Delete this transaction?\n\nAmount: ${tx.type === "credit" ? "+" : "-"}${
-        tx.amount
-      }\nNote: ${tx.note || "(no note)"}`
-    );
-    if (!confirmed) return;
-
     try {
       setLoading(true);
       await deleteTransaction(tx.id);
@@ -65,16 +62,22 @@ const History = ({ refreshTrigger = 0, isReconciling = false }) => {
       }
       const id = setTimeout(() => setLastDeleted(null), 6000);
       setUndoTimerId(id);
+      toast.success("Transaction deleted. You have 6 seconds to undo.");
       await loadTransactions();
     } catch (err) {
       console.error("Failed to delete transaction", err);
-      setError("Could not delete transaction. Please try again.");
+      const msg = "Could not delete transaction. Please try again.";
+      setError(msg);
+      toast.error(msg);
     } finally {
       setLoading(false);
     }
   };
 
   const filteredTransactions = transactions.filter((tx) => {
+    // Filter out fee transactions (shown inline with debits)
+    if (tx.type === "fee") return false;
+
     const matchesStatus = filter === "all" ? true : tx.status === filter;
 
     const txDate = new Date(tx.createdAt);
@@ -86,6 +89,20 @@ const History = ({ refreshTrigger = 0, isReconciling = false }) => {
     return matchesStatus && afterStart && beforeEnd;
   });
 
+  // Pagination
+  const itemsPerPage = 10;
+  const totalPages = Math.ceil(filteredTransactions.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const paginatedTransactions = filteredTransactions.slice(
+    startIndex,
+    startIndex + itemsPerPage
+  );
+
+  // Reset to page 1 when filters change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [filter, startDate, endDate]);
+
   const handleUndo = async () => {
     if (!lastDeleted) return;
     try {
@@ -96,10 +113,13 @@ const History = ({ refreshTrigger = 0, isReconciling = false }) => {
       }
       await restoreTransaction(lastDeleted.id);
       setLastDeleted(null);
+      toast.success("Transaction restored.");
       await loadTransactions();
     } catch (err) {
       console.error("Failed to restore transaction", err);
-      setError("Could not undo delete. Please try again.");
+      const msg = "Could not undo delete. Please try again.";
+      setError(msg);
+      toast.error(msg);
     } finally {
       setLoading(false);
     }
@@ -111,7 +131,10 @@ const History = ({ refreshTrigger = 0, isReconciling = false }) => {
         <div className="rounded-lg bg-red-900/20 border border-red-700 p-4">
           <p className="text-red-100 text-sm">{error}</p>
           <button
-            onClick={loadTransactions}
+            onClick={() => {
+              setError(null);
+              loadTransactions();
+            }}
             className="mt-3 px-3 py-2 bg-red-700 text-white rounded text-sm hover:bg-red-600"
           >
             Try again
@@ -204,39 +227,71 @@ const History = ({ refreshTrigger = 0, isReconciling = false }) => {
 
       <div className="rounded-xl border border-gray-800 bg-gray-850 p-5 shadow-inner shadow-black/20">
         <TransactionList
-          transactions={filteredTransactions}
+          transactions={paginatedTransactions}
           loading={loading}
           showDelete
           onDelete={handleDelete}
         />
       </div>
 
-      {lastDeleted && (
-        <div className="flex items-center justify-between rounded-lg border border-indigo-500/40 bg-indigo-900/30 px-4 py-3 text-sm text-indigo-100">
-          <div>
-            Deleted {lastDeleted.type === "credit" ? "credit" : "debit"} of $
-            {lastDeleted.amount}
-            {lastDeleted.note ? ` · ${lastDeleted.note}` : ""}
+      {/* Pagination Controls */}
+      {filteredTransactions.length > itemsPerPage && (
+        <div className="flex items-center justify-between text-sm">
+          <div className="text-gray-400">
+            Showing {startIndex + 1}-
+            {Math.min(startIndex + itemsPerPage, filteredTransactions.length)}{" "}
+            of {filteredTransactions.length} transactions
           </div>
           <div className="flex items-center gap-2">
             <button
-              onClick={handleUndo}
-              className="rounded-md bg-indigo-500 px-3 py-1.5 text-xs font-semibold text-white shadow hover:bg-indigo-400"
+              onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+              disabled={currentPage === 1}
+              className="px-3 py-1.5 rounded border border-gray-700 text-gray-300 hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
-              Undo
+              Previous
             </button>
+            <span className="text-gray-400">
+              Page {currentPage} of {totalPages}
+            </span>
             <button
-              onClick={() => {
-                if (undoTimerId) {
-                  clearTimeout(undoTimerId);
-                  setUndoTimerId(null);
-                }
-                setLastDeleted(null);
-              }}
-              className="text-xs text-indigo-200 hover:text-white"
+              onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+              disabled={currentPage === totalPages}
+              className="px-3 py-1.5 rounded border border-gray-700 text-gray-300 hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
-              Dismiss
+              Next
             </button>
+          </div>
+        </div>
+      )}
+
+      {lastDeleted && (
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 max-w-2xl w-full mx-4">
+          <div className="flex items-center justify-between rounded-lg border border-indigo-500/40 bg-indigo-900/95 backdrop-blur-sm px-4 py-3 text-sm text-indigo-100 shadow-xl shadow-black/50">
+            <div>
+              Deleted {lastDeleted.type === "credit" ? "credit" : "debit"} of ₹
+              {lastDeleted.amount}
+              {lastDeleted.note ? ` · ${lastDeleted.note}` : ""}
+            </div>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={handleUndo}
+                className="rounded-md bg-indigo-500 px-3 py-1.5 text-xs font-semibold text-white shadow hover:bg-indigo-400"
+              >
+                Undo
+              </button>
+              <button
+                onClick={() => {
+                  if (undoTimerId) {
+                    clearTimeout(undoTimerId);
+                    setUndoTimerId(null);
+                  }
+                  setLastDeleted(null);
+                }}
+                className="text-xs text-indigo-200 hover:text-white"
+              >
+                Dismiss
+              </button>
+            </div>
           </div>
         </div>
       )}

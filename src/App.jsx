@@ -73,15 +73,8 @@ function App() {
     <BrowserRouter>
       <div className="min-h-screen bg-linear-to-b from-gray-950 via-gray-900 to-gray-900 text-gray-100">
         <header className="bg-gray-900/80 backdrop-blur border-b border-gray-800 sticky top-0 z-10">
-          <div className="max-w-7xl mx-auto py-5 px-4 sm:px-6 lg:px-8 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div className="max-w-7xl mx-auto py-5 px-4 sm:px-6 lg:px-8 flex items-center justify-between">
             <div>
-              <p className="text-xs uppercase tracking-[0.25em] text-indigo-300">
-                Wallet
-              </p>
-              <p className="text-sm text-gray-300 mt-1">
-                {userLoadError ||
-                  (userName ? `Welcome, ${userName}` : "Welcome")}
-              </p>
               <h1 className="text-3xl font-bold text-white">
                 Mini Fintech Wallet
               </h1>

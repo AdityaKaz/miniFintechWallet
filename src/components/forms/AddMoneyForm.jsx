@@ -1,4 +1,5 @@
 import { useState } from "react";
+import toast from "react-hot-toast";
 import {
   createTransaction,
   fetchUser,
@@ -21,14 +22,15 @@ const AddMoneyForm = ({ userId = CURRENT_USER_ID, onSuccess }) => {
 
     const baseValidation = validateAddMoneyAmount(numericAmount);
     if (!baseValidation.isValid) {
+      toast.error(baseValidation.message);
       setError(baseValidation.message);
       return;
     }
 
     if (numericAmount > TRANSFER_LIMIT) {
-      setError(
-        `Amount exceeds maximum limit of ₹${TRANSFER_LIMIT.toLocaleString()}`
-      );
+      const msg = `Amount exceeds maximum limit of ₹${TRANSFER_LIMIT.toLocaleString()}`;
+      toast.error(msg);
+      setError(msg);
       return;
     }
 
@@ -55,12 +57,13 @@ const AddMoneyForm = ({ userId = CURRENT_USER_ID, onSuccess }) => {
 
       setAmount("");
       setNote("");
+      toast.success("Money added successfully!");
       if (typeof onSuccess === "function") onSuccess();
-      alert("Money added successfully!");
     } catch (err) {
       console.error("Add money failed", err);
-      setError("Could not add money. Please try again.");
-      alert("Failed to add money.");
+      const msg = "Could not add money. Please try again.";
+      toast.error(msg);
+      setError(msg);
     } finally {
       setLoading(false);
     }
