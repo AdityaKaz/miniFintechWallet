@@ -16,6 +16,26 @@ const TransactionList = ({
     return acc;
   }, {});
 
+  // For refund transactions, extract fee from note if present
+  const getRefundFee = (tx) => {
+    if (
+      tx.type === "credit" &&
+      tx.note &&
+      tx.note.startsWith("Refund: Transfer failed") &&
+      tx.linkedTransactionId
+    ) {
+      // Find the original debit and its fee
+      const origDebit = transactions.find(
+        (t) => t.id === tx.linkedTransactionId && t.type === "debit"
+      );
+      const origFee = feeMap[tx.linkedTransactionId];
+      if (origFee && origDebit) {
+        return origFee;
+      }
+    }
+    return null;
+  };
+
   const formatCurrency = (amount) => {
     return new Intl.NumberFormat("en-IN", {
       style: "currency",
@@ -91,7 +111,14 @@ const TransactionList = ({
     <div className="space-y-2.5">
       {(limit ? visibleTransactions.slice(0, limit) : visibleTransactions).map(
         (tx) => {
-          const fee = feeMap[tx.id];
+          const fee = feeMap[tx.id] || getRefundFee(tx);
+
+          // For refund transactions, don't add fee to amount (already included)
+          const isRefund =
+            tx.type === "credit" &&
+            tx.note &&
+            tx.note.startsWith("Refund: Transfer failed") &&
+            tx.linkedTransactionId;
 
           return (
             <div
@@ -122,7 +149,9 @@ const TransactionList = ({
                     )}`}
                   >
                     {tx.type === "credit" ? "+" : "-"}
-                    {fee
+                    {isRefund
+                      ? formatCurrency(tx.amount)
+                      : fee
                       ? formatCurrency(tx.amount + fee)
                       : formatCurrency(tx.amount)}
                   </p>

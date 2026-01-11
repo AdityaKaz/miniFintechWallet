@@ -4,13 +4,13 @@
       "id": "1",
       "name": "User One",
       "email": "one@example.com",
-      "balance": 10090
+      "balance": 4004.88
     },
     {
       "id": "2",
       "name": "User Two",
       "email": "two@example.com",
-      "balance": 4908
+      "balance": 12491
     }
   ],
   "transactions": [
@@ -308,6 +308,212 @@
       "status": "success",
       "note": "Top-up",
       "createdAt": "2026-01-10T09:11:00.669Z"
+    },
+    {
+      "id": "0e2a",
+      "type": "debit",
+      "amount": 1000,
+      "userId": "2",
+      "toUserId": "1",
+      "status": "success",
+      "note": "Transfer to User #1",
+      "createdAt": "2026-01-11T13:14:40.522Z"
+    },
+    {
+      "id": "d2a5",
+      "type": "fee",
+      "amount": 20,
+      "userId": "2",
+      "status": "success",
+      "note": "Transfer fee",
+      "linkedTransactionId": "0e2a",
+      "createdAt": "2026-01-11T13:14:40.522Z"
+    },
+    {
+      "id": "d438",
+      "type": "credit",
+      "amount": 1000,
+      "userId": "1",
+      "fromUserId": "2",
+      "status": "success",
+      "note": "Received from User Two",
+      "linkedTransactionId": "0e2a",
+      "createdAt": "2026-01-11T13:14:40.522Z"
+    },
+    {
+      "id": "083b",
+      "type": "debit",
+      "amount": 3000,
+      "userId": "1",
+      "toUserId": "2",
+      "status": "success",
+      "note": "Transfer to User #2",
+      "createdAt": "2026-01-11T13:30:12.442Z"
+    },
+    {
+      "id": "7b58",
+      "type": "fee",
+      "amount": 60,
+      "userId": "1",
+      "status": "success",
+      "note": "Transfer fee",
+      "linkedTransactionId": "083b",
+      "createdAt": "2026-01-11T13:30:12.442Z"
+    },
+    {
+      "id": "3480",
+      "type": "credit",
+      "amount": 3000,
+      "userId": "2",
+      "fromUserId": "1",
+      "status": "success",
+      "note": "Received from User One",
+      "linkedTransactionId": "083b",
+      "createdAt": "2026-01-11T13:30:12.442Z"
+    },
+    {
+      "id": "3f93",
+      "type": "debit",
+      "amount": 2000,
+      "userId": "1",
+      "toUserId": "2",
+      "status": "success",
+      "note": "Transfer to User #2",
+      "createdAt": "2026-01-11T13:34:25.375Z"
+    },
+    {
+      "id": "55d1",
+      "type": "credit",
+      "amount": 2000,
+      "userId": "2",
+      "fromUserId": "1",
+      "status": "success",
+      "note": "Received from User One",
+      "linkedTransactionId": "3f93",
+      "createdAt": "2026-01-11T13:34:53.413Z"
+    },
+    {
+      "id": "7031",
+      "type": "debit",
+      "amount": 1000,
+      "userId": "1",
+      "toUserId": "2",
+      "status": "success",
+      "note": "Transfer to User #2",
+      "createdAt": "2026-01-11T13:40:22.421Z"
+    },
+    {
+      "id": "20d7",
+      "type": "fee",
+      "amount": 20,
+      "userId": "1",
+      "status": "success",
+      "note": "Transfer fee",
+      "linkedTransactionId": "7031",
+      "createdAt": "2026-01-11T13:40:22.421Z"
+    },
+    {
+      "id": "b38f",
+      "type": "credit",
+      "amount": 1000,
+      "userId": "2",
+      "fromUserId": "1",
+      "status": "success",
+      "note": "Received from User One",
+      "linkedTransactionId": "7031",
+      "createdAt": "2026-01-11T13:40:22.421Z"
+    },
+    {
+      "id": "b0d2",
+      "type": "debit",
+      "amount": 2000,
+      "userId": "1",
+      "toUserId": "2",
+      "status": "success",
+      "note": "Transfer to User #2",
+      "createdAt": "2026-01-11T13:41:06.134Z"
+    },
+    {
+      "id": "eec4",
+      "type": "fee",
+      "amount": 40,
+      "userId": "1",
+      "status": "success",
+      "note": "Transfer fee",
+      "linkedTransactionId": "b0d2",
+      "createdAt": "2026-01-11T13:41:06.134Z"
+    },
+    {
+      "id": "0eaf",
+      "type": "credit",
+      "amount": 2000,
+      "userId": "2",
+      "fromUserId": "1",
+      "status": "success",
+      "note": "Received from User One",
+      "linkedTransactionId": "b0d2",
+      "createdAt": "2026-01-11T13:41:06.134Z"
+    },
+    {
+      "id": "a29f",
+      "type": "debit",
+      "amount": 2,
+      "userId": "1",
+      "toUserId": "2",
+      "status": "success",
+      "note": "Transfer to User #2",
+      "createdAt": "2026-01-11T13:42:05.757Z"
+    },
+    {
+      "id": "26f9",
+      "type": "fee",
+      "amount": 0.04,
+      "userId": "1",
+      "status": "success",
+      "note": "Transfer fee",
+      "linkedTransactionId": "a29f",
+      "createdAt": "2026-01-11T13:42:05.757Z"
+    },
+    {
+      "id": "cc18",
+      "type": "credit",
+      "amount": 2,
+      "userId": "2",
+      "fromUserId": "1",
+      "status": "success",
+      "note": "Received from User One",
+      "linkedTransactionId": "a29f",
+      "createdAt": "2026-01-11T13:42:05.757Z"
+    },
+    {
+      "id": "4ad6",
+      "type": "debit",
+      "amount": 999,
+      "userId": "1",
+      "toUserId": "2",
+      "status": "failed",
+      "note": "Failed: Timeout (>24h)",
+      "createdAt": "2026-01-01T00:00:00.000Z"
+    },
+    {
+      "id": "ebb4",
+      "type": "fee",
+      "amount": 19.98,
+      "userId": "1",
+      "status": "failed",
+      "note": "Failed: Timeout (>24h, fee)",
+      "linkedTransactionId": "4ad6",
+      "createdAt": "2026-01-01T00:00:00.000Z"
+    },
+    {
+      "id": "a8dd",
+      "type": "credit",
+      "amount": 1018.98,
+      "userId": "1",
+      "status": "success",
+      "linkedTransactionId": "4ad6",
+      "createdAt": "2026-01-11T14:24:21.244Z",
+      "note": "Refund: Transfer failed (timeout, linked to 4ad6)"
     }
   ]
 }

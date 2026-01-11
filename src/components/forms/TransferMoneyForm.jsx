@@ -121,13 +121,7 @@ const TransferMoneyForm = ({ userId = CURRENT_USER_ID, onSuccess }) => {
     let originalBalance = 0;
 
     try {
-      // TESTING: 5-second delay to simulate a slow network request
-      // Stop the server during this time to test incomplete transactions
-      console.log(
-        "🔵 Starting transfer in 5 seconds... Stop server now if testing interruption!"
-      );
-      await new Promise((resolve) => setTimeout(resolve, 5000));
-
+      // Step 1: Create debit txn (pending)
       const user = await fetchUser(userId);
       originalBalance = user.balance;
 
@@ -142,7 +136,6 @@ const TransferMoneyForm = ({ userId = CURRENT_USER_ID, onSuccess }) => {
 
       const now = new Date().toISOString();
 
-      // Step 1: Create debit txn (pending)
       debitTxn = await createTransaction({
         type: "debit",
         amount: amt,
@@ -168,6 +161,13 @@ const TransferMoneyForm = ({ userId = CURRENT_USER_ID, onSuccess }) => {
       const newSenderBalance = user.balance - totalValue;
       await updateUserBalance(userId, newSenderBalance);
       balanceUpdated = true;
+
+      // Immediately refresh transaction list to show pending
+      if (typeof onSuccess === "function") onSuccess();
+
+      // Show pending state for 2 seconds before marking as success
+      toast("Transaction is pending...");
+      await new Promise((resolve) => setTimeout(resolve, 5000));
 
       // Step 4: Credit recipient and update their balance
       const recipient = await fetchUser(recId);
