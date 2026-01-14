@@ -3,7 +3,7 @@
     {
       "id": "1",
       "name": "User One",
-      "balance": 3464.88
+      "balance": 7992
     },
     {
       "id": "2",
@@ -13,7 +13,7 @@
     {
       "id": "3",
       "name": "User Three",
-      "balance": 0
+      "balance": 9424
     }
   ],
   "transactions": [
@@ -456,6 +456,138 @@
       "note": "Transfer fee",
       "linkedTransactionId": "43c5",
       "createdAt": "2026-01-11T15:56:56.870Z"
+    },
+    {
+      "id": "b74b",
+      "type": "credit",
+      "amount": 10000,
+      "userId": "3",
+      "status": "success",
+      "note": "Top-up",
+      "createdAt": "2026-01-14T07:48:45.801Z"
+    },
+    {
+      "id": "0e26",
+      "type": "debit",
+      "amount": 1000,
+      "userId": "3",
+      "toUserId": "1",
+      "status": "success",
+      "note": "Transfer to User #1",
+      "createdAt": "2026-01-14T07:49:16.638Z"
+    },
+    {
+      "id": "bba9",
+      "type": "fee",
+      "amount": 20,
+      "userId": "3",
+      "status": "success",
+      "note": "Transfer fee",
+      "linkedTransactionId": "0e26",
+      "createdAt": "2026-01-14T07:49:16.638Z"
+    },
+    {
+      "id": "d259",
+      "type": "credit",
+      "amount": 1000,
+      "userId": "1",
+      "fromUserId": "3",
+      "status": "success",
+      "note": "Received from User Three",
+      "linkedTransactionId": "0e26",
+      "createdAt": "2026-01-14T07:49:16.638Z"
+    },
+    {
+      "id": "8914",
+      "type": "debit",
+      "amount": 1000,
+      "userId": "1",
+      "toUserId": "2",
+      "status": "success",
+      "note": "Auto-success: Server restart (<24h)",
+      "createdAt": "2026-01-14T07:50:32.243Z"
+    },
+    {
+      "id": "0e91",
+      "type": "fee",
+      "amount": 20,
+      "userId": "1",
+      "status": "success",
+      "note": "Auto-success: Server restart (<24h, fee)",
+      "linkedTransactionId": "8914",
+      "createdAt": "2026-01-14T07:50:32.243Z"
+    },
+    {
+      "id": "a78a",
+      "type": "credit",
+      "amount": 1000,
+      "userId": "2",
+      "fromUserId": "1",
+      "status": "success",
+      "linkedTransactionId": "8914",
+      "createdAt": "2026-01-14T08:04:09.998Z",
+      "note": "Received from User 1"
+    },
+    {
+      "id": "6a8f",
+      "type": "debit",
+      "amount": 444,
+      "userId": "1",
+      "toUserId": "3",
+      "status": "success",
+      "note": "Transfer to User #3",
+      "createdAt": "2026-01-14T08:05:21.423Z"
+    },
+    {
+      "id": "9a57",
+      "type": "fee",
+      "amount": 8.88,
+      "userId": "1",
+      "status": "success",
+      "note": "Transfer fee",
+      "linkedTransactionId": "6a8f",
+      "createdAt": "2026-01-14T08:05:21.423Z"
+    },
+    {
+      "id": "da70",
+      "type": "credit",
+      "amount": 444,
+      "userId": "3",
+      "fromUserId": "1",
+      "status": "success",
+      "note": "Received from User One",
+      "linkedTransactionId": "6a8f",
+      "createdAt": "2026-01-14T08:05:21.423Z"
+    },
+    {
+      "id": "9e4e",
+      "type": "debit",
+      "amount": 5000,
+      "userId": "3",
+      "toUserId": "1",
+      "status": "failed",
+      "note": "Failed: Timeout (>24h)",
+      "createdAt": "2026-01-11T13:41:06.134Z"
+    },
+    {
+      "id": "6a71",
+      "type": "fee",
+      "amount": 100,
+      "userId": "3",
+      "status": "failed",
+      "note": "Failed: Timeout (>24h, fee)",
+      "linkedTransactionId": "9e4e",
+      "createdAt": "2026-01-11T13:41:06.134Z"
+    },
+    {
+      "id": "c1f5",
+      "type": "credit",
+      "amount": 5100,
+      "userId": "3",
+      "status": "success",
+      "linkedTransactionId": "9e4e",
+      "createdAt": "2026-01-14T08:11:28.230Z",
+      "note": "Refund: Transfer failed (timeout, linked to 9e4e)"
     }
   ]
 }

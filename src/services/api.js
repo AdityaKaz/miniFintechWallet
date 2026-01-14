@@ -99,6 +99,7 @@ export const reconcileAllPendingTransfers = async () => {
     if (tx.type === "debit" && tx.status === "pending") {
       const created = new Date(tx.createdAt).getTime();
       if (now - created > 24 * 60 * 60 * 1000) {
+        // Mark as failed and refund
         await updateTransactionStatus(
           tx.id,
           "failed",
@@ -135,6 +136,47 @@ export const reconcileAllPendingTransfers = async () => {
         });
 
         await updateUserBalance(user.id, user.balance + totalRefund);
+        fixed.push(tx.id);
+      } else {
+        // Mark as success if <24h old
+        await updateTransactionStatus(
+          tx.id,
+          "success",
+          "Auto-success: Server restart (<24h)"
+        );
+
+        // Mark linked fee as success if exists
+        const feeTx = allTxns.find(
+          (t) =>
+            t.type === "fee" &&
+            t.linkedTransactionId === tx.id &&
+            t.status === "pending"
+        );
+        if (feeTx) {
+          await updateTransactionStatus(
+            feeTx.id,
+            "success",
+            "Auto-success: Server restart (<24h, fee)"
+          );
+        }
+
+        // Create credit for recipient user if toUserId exists
+        if (tx.toUserId) {
+          const creditTxn = await createTransaction({
+            type: "credit",
+            amount: tx.amount,
+            userId: tx.toUserId,
+            fromUserId: tx.userId,
+            status: "success",
+            linkedTransactionId: tx.id,
+            createdAt: new Date().toISOString(),
+            note: `Received from User ${tx.userId}`,
+          });
+          // Update recipient's balance
+          const recipient = await fetchUser(tx.toUserId);
+          await updateUserBalance(recipient.id, recipient.balance + tx.amount);
+        }
+
         fixed.push(tx.id);
       }
     }
