@@ -96,6 +96,8 @@ See `db.json` for mock data and structure.
 
 ![Loading skeletons for balance and transactions](screenshots/loading.png)
 
+## Documentation
+
 ## How to Test
 
 1. Run `npm test` for all tests (unit, component, integration)
