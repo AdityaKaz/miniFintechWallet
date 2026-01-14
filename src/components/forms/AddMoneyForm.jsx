@@ -27,12 +27,7 @@ const AddMoneyForm = ({ userId = CURRENT_USER_ID, onSuccess }) => {
       return;
     }
 
-    if (numericAmount > TRANSFER_LIMIT) {
-      const msg = `Amount exceeds maximum limit of ₹${TRANSFER_LIMIT.toLocaleString()}`;
-      toast.error(msg);
-      setError(msg);
-      return;
-    }
+    // Removed transaction limit check for adding money
 
     try {
       setLoading(true);
@@ -90,9 +85,7 @@ const AddMoneyForm = ({ userId = CURRENT_USER_ID, onSuccess }) => {
             disabled={loading}
             required
           />
-          <p className="text-xs text-gray-400 mt-1">
-            Max ₹{TRANSFER_LIMIT.toLocaleString()} per transaction
-          </p>
+          {/* Removed transaction limit note for adding money */}
         </div>
         <div className="sm:col-span-2">
           <label className="block text-sm text-gray-300 mb-1">

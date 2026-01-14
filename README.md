@@ -96,6 +96,16 @@ See `db.json` for mock data and structure.
 
 ![Loading skeletons for balance and transactions](screenshots/loading.png)
 
+## Demo Video
+
+<details>
+   <summary>Click to view video demo</summary>
+
+   <video src="screenshots/Mini%20Fintech%20Wallet%20Demo.mp4" controls width="600">
+      Your browser does not support the video tag.
+   </video>
+</details>
+
 ## Documentation
 
 ## How to Test
