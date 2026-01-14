@@ -98,15 +98,9 @@ See `db.json` for mock data and structure.
 
 ## Demo Video
 
-<details>
-   <summary>Click to view video demo</summary>
+[![Watch Demo Video](screenshots/dashboard.png)](https://drive.google.com/file/d/1feVTKSO3YhKghshhnRdIj3oa_UpKe2WS/view?usp=sharing)
 
-   <video src="screenshots/Mini%20Fintech%20Wallet%20Demo.mp4" controls width="600">
-      Your browser does not support the video tag.
-   </video>
-</details>
-
-## Documentation
+▶️ [Click here to watch the demo video on Google Drive](https://drive.google.com/file/d/1feVTKSO3YhKghshhnRdIj3oa_UpKe2WS/view?usp=sharing)
 
 ## How to Test
 
